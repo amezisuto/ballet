@@ -1,4 +1,5 @@
 function debugLog()
 {
-    console.log('Hello World');
+    alert('Hello');
 }
+
