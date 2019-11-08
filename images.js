@@ -1,5 +1,0 @@
-function debugLog()
-{
-    alert('Hello');
-}
-
