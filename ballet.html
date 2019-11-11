@@ -1,21 +1,34 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<title></title>
+	<meta name="author" content="Your name.">
+	<meta name="description" content="">
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+	<meta name="format-detection" content="telephone=no">
+	<link rel="stylesheet" type="text/css" href="css/style.css">
 </head>
-<body> 
-    <script type="text/javascript">
-    // img要素を取得する
-    var img = document.getElementById("image_place");
-    img.src="image/nabe01.png";
-        </script>
-    <script src="js/images.js" type="text/javascript"></script>
-    <body>
-<h1>外部ファイル(JavaScript)の読み込み</h1>
-<button type="button" onclick="ChangeParaToDate()">クリックして下さい
-</button>
-</body>
+<div id="appScreen">
+		<canvas id="canvas" width="480" height="480"></canvas>
+		<p class="title" id="out">・出題<br></p>
+		<p class="content">html5+jsで動作するオリジナルのゲームを提供素材を使い、<br>一週間以内、１人で作成してください。作成の際に参考にした資料名やWEBサイトのURL、作成に掛かった時間や感想を添えて作品を提出してください。また、素材も自由に追加して頂いて構いません。<br><br>
+            例えば…<br>
+            　海底でカニ・タコ・イカを捕まえるアクションゲーム等…<br>
+            <br></p>
+        <p class="copyright">©2016 Bullets Co.,Ltd. All Rights Reserved.</p>
+        </body>
+    <script src="js/myTlib.js" type="text/javascript"></script>
+    <script src="js/collider.js" type="text/javascript"></script>
+    <script src="js/object.js" type="text/javascript"></script>
+    <script src="js/bullet.js" type="text/javascript"></script>
+    <script src="js/enemy.js" type="text/javascript"></script>
+    <script src="js/player.js" type="text/javascript"></script>
+    <script src="js/SceneMaster.js" type="text/javascript"></script>
+
+
+
+<h1>外部ファイル(JavaScript)の読み込み</h1> 
+
 </html>
