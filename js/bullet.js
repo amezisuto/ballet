@@ -2,7 +2,6 @@ class Bullet{
     constructor(name,image,scale,x,y){
         this.object=new GameObject(name,image,scale,x,y);
         //this.funcP=new 
-        this.mo=Move;
     }
     get myName()
     {
@@ -12,11 +11,24 @@ class Bullet{
     {
         return this.image.src;
     }
+      // 更新メソッド。
+  update(info) {
+    this._color = 'rgb(0, 0, 0)';
+    this.BulletMove();
+  }
+    BulletMove()
+    {
+        if(this.object.isAlive)
+        {
+            this.object.myPosY=this.object.posY-5;
+            this.object.image.Draw(this.object.posX,this.object.posY,true);
+            if(CanvasCollider(this))
+            {
+                this.object.isAlive=false;
+                console.log("消す");
+            }
+        }
 
-}
-function Move()
-{
-   this.object.myposX+=1;
-   this.object.image.Draw(this.object.posX,this.object.posY,true);
-   console.log("通っている");
+
+    }
 }

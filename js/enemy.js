@@ -1,20 +1,42 @@
 class Enmey{
-    constructor(name,image,scale,x,y){
+    constructor(name,image,scale,x,y,type,time=0){
         this.object=new GameObject(name,image,scale,x,y);
+        this.velX=2;
+        this.velY=0.5;
+        this.type=type;
+        this.myTime=time;
     }
-    get myName()
+// 更新メソッド。
+update(info) {
+    this._color = 'rgb(0, 0, 0)';
+    switch(this.type)
     {
-        return this.name;
+        case 0:
+            this.EnemyStraightMove();
+            break;
+        case 1:  
+            this.EnemyWaveMove();     
+            break;
     }
-    get myImage()
-    {
-        return this.image.src;
-    }
+    
+  }
+  EnemyStraightMove()
+  {
+      this.object.posY+=this.velY;
+      if(CanvasCollider(this))
+      {
+          this.object.isAlive=false;
+      }
+  }
+  EnemyWaveMove()
+  {
+      this.object.posX*=Math.sin(this.velX);
+      this.object.posY+=this.velY;
+      if(CanvasCollider(this))
+      {
+          this.object.isAlive=false;
+      }
+  }
 }
 
 
-console.log("別");
-var enemy=new Enmey('namae',"image/nabe01.png",0,0);
-var count=0;
-console.log(enemy.myName);
- 

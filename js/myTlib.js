@@ -34,6 +34,22 @@ LoadImage.prototype = {
     Image : function() {
         return this.img;
     },
+    ImageW : function()
+    {
+        if( this.scale != 1 ) // スケールが1ではないなら
+        {
+            return this.img.width *  this.scale;
+        }
+        return this.img.width;
+    },
+    ImageH : function()
+    {
+        if( this.scale != 1 ) // スケールが1ではないなら
+        {
+        return this.img.width * this.scale;
+        }
+        return this.img.width;
+    },
     Draw : function( x, y, bCenter ) {
         this.canv.globalAlpha = ClampZeroOne( this.alpha );
         if( this.canv.globalAlpha > 0.0 )
