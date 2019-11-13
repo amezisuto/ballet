@@ -1,26 +1,29 @@
 class Bullet{
-    constructor(name,image,scale,x,y){
+    constructor(name,image,scale,x,y,velx,vely,paw){
         this.object=new GameObject(name,image,scale,x,y);
-        //this.funcP=new 
+        this.velX=velx;
+        this.velY=vely;
+        this.bulletPawer = paw;
     }
-    get myName()
+    get BulletPawer()
     {
-        return this.name;
+        return this.bulletPawer;
     }
-    get myImage()
+    set BulletPawer(paw)
     {
-        return this.image.src;
+        this.bulletPawer = paw;
     }
       // 更新メソッド。
   update(info) {
-    this._color = 'rgb(0, 0, 0)';
+   // this._color = 'rgb(0, 0, 0)';
     this.BulletMove();
   }
     BulletMove()
     {
         if(this.object.isAlive)
         {
-            this.object.myPosY=this.object.posY-5;
+            this.object.posX+=this.velX;
+            this.object.posY+=this.velY;
             this.object.image.Draw(this.object.posX,this.object.posY,true);
             if(CanvasCollider(this))
             {

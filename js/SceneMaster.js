@@ -1,3 +1,4 @@
+
 class MasterScene {
   constructor(width, height) {
     this._width = width;
@@ -10,6 +11,7 @@ class MasterScene {
     // 線形四分木空間。
     // とりあえずレベル3ぐらいで。
     this._qTree = new LinearQuadTreeSpace(width, height, 3);
+    this.Gametime=0;
   }
   
   // 世界にActorを配置する。
@@ -99,32 +101,46 @@ class MasterScene {
         } else {
           collider2 = cellColliderCahce[j];
         }
-        if(collider1.object.isAlive&&collider2.object.isAlive)
+        if(collider1.object.isAlive&&collider2.object.isAlive&&!collider1.object.isHide&&!collider2.object.isHide)
         {
         const hit = Collider(collider1, collider2);
-        if(hit) {
-          if(!(collider1.object.myName=="bullet"&&collider2.object.myName=="bullet"))
-          {
-            if(collider1.object.myName=="bullet"||collider2.object.myName=="bullet")
-            {
-              if(collider1.object.myName=="player"||collider2.object.myName=="player")
-              {
-              console.log("プレイヤーに当たった");
-              }
-              else
-              {
-                collider1.object.isAlive=false;
-                collider2.object.isAlive=false;
-                console.log("敵に当たった");
-              }
-            }
         
+        if(hit) {
+          if(collider1.object.myName=="player"||collider2.object.myName=="player")
+          {
+            if(collider1.object.myName=="enemy"||collider2.object.myName=="enemy"||collider1.object.myName=="enemyBullet"||collider2.object.myName=="enemyBullet")
+            {
+            if(collider1.object.myName=="player")
+            {
+              collider1.object.isAlive=false;
+              console.log("hit");
+            }
+            else{
+              collider2.object.isAlive=false;
+              console.log("hit");
+            }
           }
-      }
+        }
+          if(collider1.object.myName=="bullet"||collider2.object.myName=="bullet")
+          {
+            if(collider1.object.myName=="enemy"||collider2.object.myName=="enemy")
+           {
+            if(collider1.object.myName=="enemy")
+            {
+              collider1.Damage(collider2.BulletPawer);
+              collider2.object.isAlive=false;
+            }
+            else{
+              collider2.Damage(collider1.BulletPawer);
+              collider1.object.isAlive=false;
+            }
+          }
+        }
+
       }
     }
   }
-
+}
     // 衝突オブジェクトリストと。
     const objLength = objList.length;
     const cellLength = cell.length;
@@ -134,95 +150,134 @@ class MasterScene {
       for(let j=0; j<cellLength; j++) {
         const cellObj = cell[j];
         const collider2 = cellColliderCahce[j]; // キャッシュから取ってくる。
-        if(collider1.object.isAlive&&collider2.object.isAlive)
+        if(collider1.object.isAlive&&collider2.object.isAlive&&!collider1.object.isHide&&!collider2.object.isHide)
         {
           const hit = Collider(collider1, collider2);
         
           if(hit) {
-            if(!(collider1.object.myName=="bullet"&&collider2.object.myName=="bullet"))
+            if(collider1.object.myName=="player"||collider2.object.myName=="player")
             {
+              if(collider1.object.myName=="enemy"||collider2.object.myName=="enemy"||collider1.object.myName=="enemyBullet"||collider2.object.myName=="enemyBullet")
+              {
+              if(collider1.object.myName=="player")
+              {
+                collider1.object.isAlive=false;
+                console.log("hit");
+              }
+              else{
+                collider2.object.isAlive=false;
+                console.log("hit");
+              }
+            }
+          }
             if(collider1.object.myName=="bullet"||collider2.object.myName=="bullet")
             {
-              if(collider1.object.myName=="player"||collider2.object.myName=="player")
-            {
-              console.log("プレイヤーに当たった");
+              if(collider1.object.myName=="enemy"||collider2.object.myName=="enemy")
+             {
+              if(collider1.object.myName=="enemy")
+              {
+                collider1.Damage(collider2.BulletPawer);
+                collider2.object.isAlive=false;
+              }
+              else{
+                collider2.Damage(collider1.BulletPawer);
+                collider1.object.isAlive=false;
+              }
             }
-            else
-            {
-              collider1.object.isAlive=false;
-              collider2.object.isAlive=false;
-              console.log("敵に当たった");
-            }
-              
           }
-  
-        }
-      }
-      }
 
+      }
     }
-  }
+      }
+    }
 }
-Sequence()
+  Sequence()
 {
   this.sequence= title_seq;
 }
+
 }
 
 
 var scene =new MasterScene(global.canvas.width,global.canvas.height);
 
-var enemy=new Enmey('namae',"image/nabe01.png",0.5,global.canvas.width/2,global.canvas.height);
-var player =new Player("player","image/texture00.png",0.5,global.canvas.width/2,global.canvas.height / 2);
-var playerE=[new Enmey("enemy","image/nabe01.png",0.5,Math.floor( Math.random() * global.canvas.width ),Math.floor( Math.random() * global.canvas.height ),0)];
-var bullet=[new Bullet("bullet","image/bullet.png",1,global.canvas.width/2,global.canvas.height / 2)];
+var player =new Player("player","image/texture00.png",0.1,global.canvas.width/2,global.canvas.height / 1.5);
+var enemy=[];
+var bullet=[];
 var count =0;
-bullet.pop();
-playerE.pop();
-scene.addActor(enemy);
-scene.addActor(player);
+var enemyData=GetEnemyData();
 player.object.isAlive=true;
-for(i=0;i<100;i++)
+player.object.isHide=false;
+scene.addActor(player);
+//----------------------------------------------------------------------------
+// 敵をデータを元に登録しておく
+for(i=0;i<enemyData.length;i++)
 {
-playerE.push(new Enmey("enemy"+i,"image/texture01.png",0.5,Math.floor( Math.random() * global.canvas.width ),Math.floor( Math.random() * global.canvas.height ),Math.floor( Math.random() *2)));
-playerE[playerE.length-1].object.isAlive=true;
-scene.addActor(playerE[i]);
+  var name=enemyData[i].name;
+  var image=enemyData[i].image;
+  var scale=enemyData[i].scale;
+  var posX=enemyData[i].posX;  var velX=enemyData[i].velX;
+  var posY=enemyData[i].posY;  var velY=enemyData[i].velY;
+  var type=enemyData[i].type;  var bulletType=enemyData[i].bulletType;
+  var HP = enemyData[i].HP;
+  var time =enemyData[i].time; var interval=enemyData[i].interval;
+  enemy.push(new Enmey(name,image,scale,posX,posY,velX,velY,type,HP,time,interval,bulletType));
+  enemy[i].object.isAlive=true;
+  scene.addActor(enemy[i]); 
 }
-
+//----------------------------------------------------------------------------
 function title_seq()
 	{
+    this.Gametime++;
     if(player.keyflag[4]==true)
     {
-      //count--
+      count--;
       if(count<=0)
       {
-        bullet.push(new Bullet("bullet","image/bullet.png",1,player.object.posX,player.object.posY-player.object.image.ImageH()/2));
+        bullet.push(new Bullet("bullet","image/bullet.png",1,player.object.posX,player.object.posY-(player.object.image.ImageH()/2+32),0,-5,1));
         bullet[bullet.length-1].object.isAlive=true;
-        //count=5;
+        bullet[bullet.length-1].object.isHide=false;
+        count=5;
         scene.addActor(bullet[bullet.length-1]);
       }
     }
     scene.update();
-
-    enemy.object.image.Draw(enemy.object.posX,enemy.object.posY,true);
     //Move(player);
     if(player.object.isAlive)
     {
       player.object.image.Draw(player.object.posX,player.object.posY,true);
     }
   
-    for(i=0;i<playerE.length;i++)
+    for(i=0;i<enemy.length;i++)
     {
-      if(playerE[i].object.isAlive)
+      if(enemy[i].object.isHide)
       {
-        playerE[i].object.image.Draw(playerE[i].object.posX,playerE[i].object.posY,true);
+        //setTimeout( function(){enemy[i].object.SetHide(false);}, enemy[i].myTime*1000);
+        if(scene.Gametime/60>enemy[i].myTime)
+        {
+          enemy[i].object.SetHide(false);
+        }
+      }
+      if(enemy[i].myhp<=0){enemy[i].object.isAlive=false;}//  敵のHPが0になったら死んだことにする
+      if(enemy[i].bulletCount/60>enemy[i].interval)
+      {
+        shootCircularBullets(45,2,enemy[i]);
+        enemy[i].bulletCount=0;
+      }
+      if(enemy[i].object.isAlive&&!enemy[i].object.isHide)
+      {
+        enemy[i].object.image.Draw(enemy[i].object.posX,enemy[i].object.posY,true);
+      }  
+      if(!enemy[i].object.isAlive&&!enemy[i].object.isHide)
+      {
+        enemy.splice(i,1);
       }  
     }
-    for(i=0;i<playerE.length;i++)
+    for(i=0;i<enemy.length;i++)
     {
-      if(!playerE[i].object.isAlive)
+      if(!enemy[i].object.isAlive&&!enemy[i].object.isHide)
       {
-        playerE.splice(i,1);
+        enemy.splice(i,1);
       }  
     }
     for(i=0;i<bullet.length;i++)
@@ -234,32 +289,24 @@ function title_seq()
     }
 
   }
-//CSVファイルを読み込む関数getCSV()の定義
-function getCSV(){
-  var req = new XMLHttpRequest(); // HTTPでファイルを読み込むためのXMLHttpRrequestオブジェクトを生成
-  req.open("get", "test.csv", true); // アクセスするファイルを指定
-  req.send(null); // HTTPリクエストの発行
-  console.log("cheak");
-  // レスポンスが返ってきたらconvertCSVtoArray()を呼ぶ	
-  req.onload = function(){
-convertCSVtoArray(req.responseText); // 渡されるのは読み込んだCSVデータ
-  }
-}
-
-// 読み込んだCSVデータを二次元配列に変換する関数convertCSVtoArray()の定義
-function convertCSVtoArray(str){ // 読み込んだCSVデータが文字列として渡される
-  var result = []; // 最終的な二次元配列を入れるための配列
-  var tmp = str.split("\n"); // 改行を区切り文字として行を要素とした配列を生成
-
-  // 各行ごとにカンマで区切った文字列を要素とした二次元配列を生成
-  for(var i=0;i<tmp.length;++i){
-      result[i] = tmp[i].split(',');
-  }
-
-  alert(result[1][2]); // 300yen
-}
-
-getCSV(); //最初に実行される
+      // degree度の方向にspeedの速さで弾を発射する
+     function shootBullet(degree, speed,enemy) {
+        const rad = degree / 180 * Math.PI;
+        const velocityX = Math.cos(rad) * speed;
+        const velocityY = Math.sin(rad) * speed;
+        bullet.push(new Bullet("enemyBullet","image/bullet.png",1,enemy.object.posX, enemy.object.posY,velocityX,velocityY,1));
+        bullet[bullet.length-1].object.isAlive=true;
+        bullet[bullet.length-1].object.isHide=false;
+        scene.addActor(bullet[bullet.length-1]);
+    }
+  
+    // num個の弾を円形に発射する
+   function shootCircularBullets(num, speed,enemy) {
+        const degree = 360 / num;
+        for(let i = 0; i < num; i++) {
+            this.shootBullet(degree * i, speed,enemy);
+        }
+    }
   
   //! フレームアップデートメソッド
 	SetFrameUpdateFunc( frameUpdate );

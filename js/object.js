@@ -5,6 +5,7 @@ class GameObject{
         this.posX=x;
         this.posY=y;
         this.alive =false;
+        this.hide =true;
     }
     get myName()
     {
@@ -14,6 +15,10 @@ class GameObject{
     {
         return this.image.src;
     }
+    get isHide()
+    {
+        return this.hide;
+    }
     get isAlive()
     {
         return this.alive;
@@ -21,6 +26,10 @@ class GameObject{
     set isAlive(flag)
     {
         this.alive=flag;
+    }
+    set isHide(flag)
+    {
+        this.hide=flag;
     }
     set myPosX(x)
     {
@@ -39,5 +48,8 @@ class GameObject{
   get bottom() { return this.posY + this.image.ImageH()/2; }
   get left() { return this.posX - this.image.ImageW()/2;  }
   get right() { return this.posX + this.image.ImageW()/2; }
-
+SetHide(flag)
+{
+    this.isHide=flag;
+}
 }
