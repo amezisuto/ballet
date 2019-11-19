@@ -1,14 +1,17 @@
+// プライヤークラス
 class Player{
     constructor(name,image,scale,x,y){
-        this.object=new GameObject(name,image,scale,x,y);
-        //this.funcP=new 
-        this.velX=3;
-        this.keyflag=[
-            false,
-            false,
-            false,
-            false,
-            false
+        this.object=new GameObject(name,image,scale,x,y);    // オブジェクト生成
+        this.velX=3;                                         // ベクトルX
+        this.velY=3;                                         // ベクトルy
+        this.bulletcount=0;                                  // 弾の間隔
+        this.keyflag=[                                       // 押されたキーを判別するためのフラグ
+            false,    // 左キー
+            false,    // 右キー
+            false,    // 上キー
+            false,    // 下キー
+            false,    // Xキー
+            false     // シフトキー
         ]
     }
   // 更新メソッド。
@@ -18,9 +21,10 @@ class Player{
   }
   Move()
 {
-    // keydown
+    // キーが押された時の処理
     document.addEventListener('keydown', (event) => {
         var keyName = event.key;
+    // 対応したフラグを立たせる---------------------------
     if(keyName=='ArrowLeft')
     {
          this.keyflag[0]=true;
@@ -41,18 +45,20 @@ class Player{
       this.keyflag[3]=true;
         
     }
-   
+    if(keyName=='x'||keyName=='X')
+    {
+     this.keyflag[4]=true;
+    }
+    if(keyName=='Shift')
+    {
+     this.keyflag[5]=true;
+    }
+    //---------------------------------------
       });
-      document.addEventListener('keypress', (event) => {
-        var keyName = event.key;
-       if(keyName=='x')
-       {
-        this.keyflag[4]=true;
-          
-       }
-        });  // keyUp
+    //キーを離した時の処理
       document.addEventListener('keyup', (event) => {
         var keyName = event.key;
+    // 対応したフラグを折る---------------------------
     if(keyName=='ArrowLeft')
     {
       this.keyflag[0]=false;
@@ -72,10 +78,17 @@ class Player{
     {
       this.keyflag[3]=false;
     }
-    if(keyName=='x')
+    if(keyName=='x'||keyName=='X')
     {
       this.keyflag[4]=false;
     }
+    if(keyName=='Shift')
+    {
+      this.keyflag[5]=false;
+      this.velX=3;   // 速度を戻す
+      this.velY=3;
+    }
+    //---------------------------------------
       });
       //
       if( this.keyflag[0]==true)
@@ -88,21 +101,37 @@ class Player{
       }
       if( this.keyflag[2]==true)
       {
-        this.object.posY-=this.velX;
+        this.object.posY-=this.velY;
       }
       if( this.keyflag[3]==true)
       {
-        this.object.posY+=this.velX;
+        this.object.posY+=this.velY;
       }
-      if(this.keyflag[4]==true)
+      if( this.keyflag[5]==true)
       {
-
+        this.velX=1;   // 速度を変える
+        this.velY=1;
       }
-     // BulletMove(bullet);
+      this.canvasMax(); // 画面外に出ないようにする
 }
-get GetBullet()
+canvasMax()
 {
-  return this.bullet;
+  if(this.object.posX<0+this.object.image.ImageW()/2)  
+  {
+    this.object.posX=0+this.object.image.ImageW()/2;
+  }
+  if(this.object.posX>global.canvas.width-this.object.image.ImageW()/2)
+  {
+    this.object.posX=global.canvas.width-this.object.image.ImageW()/2;
+  }
+  if(this.object.posY<0+this.object.image.ImageH()/2)
+  {
+    this.object.posY=0+this.object.image.ImageH()/2;
+  }
+  if(this.object.posY>global.canvas.height-this.object.image.ImageH()/2)
+  {
+    this.object.posY=global.canvas.height-this.object.image.ImageH()/2;
+  }
 }
 }
 

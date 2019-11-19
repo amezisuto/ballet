@@ -36,8 +36,24 @@ p.copyright {
 }
 div#appScreen {
     width:  480px;
-    height: 720px;
+    height: 730px;
     margin: 0 auto;
     text-align: left;
 	border: 1px solid #505050;
 }
+#lifeBar {
+	display: inline-block;
+	-webkit-appearance: none;
+	appearance: none;
+	width: 400px;
+	height: 10px;
+	vertical-align: -0.2em;
+  }
+  
+  #lifeBar::-webkit-progress-bar {
+	  background: #ccc;
+  }
+  
+  #lifeBar::-webkit-progress-value {
+	background-color: #00cc00;
+  }

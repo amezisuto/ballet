@@ -1,3 +1,4 @@
+// グローバル情報
 var global = {};
 global.canvas          = $("canvas");
 global.c2d             = global.canvas.getContext("2d");
@@ -46,9 +47,9 @@ LoadImage.prototype = {
     {
         if( this.scale != 1 ) // スケールが1ではないなら
         {
-        return this.img.width * this.scale;
+        return this.img.height * this.scale;
         }
-        return this.img.width;
+        return this.img.height;
     },
     Draw : function( x, y, bCenter ) {
         this.canv.globalAlpha = ClampZeroOne( this.alpha );
@@ -82,6 +83,8 @@ LoadImage.prototype = {
         this.canv.globalAlpha = 1.0;
     }
 }
+
+
 
 //! 値を0～1にクランプ
 function ClampZeroOne( n ){
